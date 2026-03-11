@@ -136,10 +136,6 @@ final class TimerManager: ObservableObject {
     }
 
     private func prepareAutomationPermissionIfNeeded(for action: SleepAction) -> Bool {
-        guard action == .sleep else {
-            return true
-        }
-
         guard !isSandboxed else {
             return true
         }
