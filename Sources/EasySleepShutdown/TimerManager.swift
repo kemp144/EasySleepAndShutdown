@@ -55,8 +55,7 @@ final class TimerManager: ObservableObject {
     // MARK: - Timer control
 
     func start() {
-        // TEST: Always use 1 second for testing
-        remainingSeconds = 1
+        remainingSeconds = selectedMinutes * 60
         warningShown = false
         isRunning = true
         updateMenuBarTitle()
