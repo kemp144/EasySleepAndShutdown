@@ -55,8 +55,11 @@ final class TimerManager: ObservableObject {
     // MARK: - Timer control
 
     func start() {
-        guard prepareAutomationPermissionIfNeeded(for: selectedAction) else {
-            return
+        // Only require permission for sleep, not for shutdown
+        if selectedAction == .sleep {
+            guard prepareAutomationPermissionIfNeeded(for: selectedAction) else {
+                return
+            }
         }
 
         remainingSeconds = oneSecondTimer ? 1 : selectedMinutes * 60
