@@ -217,11 +217,11 @@ final class TimerManager: ObservableObject {
         }
     }
 
-    /// Shutdown mirrors older utilities like iShutdown
-    /// by sending the Apple Event directly to loginwindow.
+    /// Shutdown sends the Apple Event directly to loginwindow.
+    /// macOS will show a confirmation dialog before proceeding.
     private func performShutdown() {
         let sent = runAppleScript(
-            "tell application \"loginwindow\" to «event aevtrsdn»"
+            "tell application \"System Events\" to shut down"
         )
         if !sent {
             showShutdownUnavailableAlert()
