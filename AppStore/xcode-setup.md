@@ -1,10 +1,26 @@
 # Xcode Setup for Mac App Store Submission
 
-## 1. Open project in Xcode
+## 1. Generate and open the Xcode project
+If `xcodegen` is installed:
+```
+cd /Users/robertengel/GIT/EasySleepAndShutdown
+./generate-xcodeproj.sh
+open EasySleepAndShutdown.xcodeproj
+```
+
+If `xcodegen` is not installed yet:
+```
+brew install xcodegen
+cd /Users/robertengel/GIT/EasySleepAndShutdown
+./generate-xcodeproj.sh
+open EasySleepAndShutdown.xcodeproj
+```
+
+Fallback for local development only:
 ```
 open /Users/robertengel/GIT/EasySleepAndShutdown/Package.swift
 ```
-Xcode will open the Swift Package. Let it resolve.
+Use the generated `.xcodeproj` for signing, archive, and App Store submission.
 
 ## 2. Signing & Capabilities
 - Select the `EasySleepShutdown` scheme → Edit Scheme → Run → Info: set Build Config to Release
@@ -14,22 +30,16 @@ Xcode will open the Swift Package. Let it resolve.
   - Bundle Identifier: `com.easysleepshutdown.app`  ← change to your own unique ID
   - Enable "Automatically manage signing"
   - Click "+ Capability" → add **App Sandbox**
-  - Under App Sandbox, enable NO additional checkboxes (the apple-events exception is in the .entitlements file)
+  - Under App Sandbox, enable NO additional checkboxes for this App Store build
 
 ## 3. Link the entitlements file
 - Build Settings → search "Code Signing Entitlements"
 - Set value to: `EasySleepShutdown.entitlements`
+- The generated project already points to this file, but verify it once in Xcode
 
 ## 4. App Icon
-- Create an asset catalog: File → New → Asset Catalog → name it `Assets.xcassets`
-- Add an `AppIcon` image set with all required macOS sizes:
-  - 16x16 @1x, @2x
-  - 32x32 @1x, @2x
-  - 128x128 @1x, @2x
-  - 256x256 @1x, @2x
-  - 512x512 @1x, @2x
-- Move `Assets.xcassets` into `Sources/EasySleepShutdown/`
-- OR use a tool: https://www.appicon.co — upload a 1024x1024 PNG, download macOS set
+- `Assets.xcassets` is already present in the repo
+- Verify that `AppIcon` is selected and there are no missing macOS icon slots
 
 ## 5. Version & Build
 - CFBundleShortVersionString: `1.0.0`  (display version, e.g., 1.0.0)
@@ -64,6 +74,7 @@ After archive:
 - [ ] Xcode: App icon all sizes present (no missing slots)
 - [ ] Xcode: Bundle identifier is unique and registered in developer portal
 - [ ] Xcode: Version 1.0.0 / Build 1 set
+- [ ] Xcode: Generated `.xcodeproj` opened instead of the raw Swift Package for App Store work
 - [ ] App Store Connect: App record created
 - [ ] App Store Connect: All metadata filled (name, subtitle, description, keywords)
 - [ ] App Store Connect: Screenshots uploaded for Mac (1280×800 or 1440×900)

@@ -81,11 +81,9 @@ Secondary: Productivity
 7. To test the 1-minute warning: set a 1 or 2 minute timer and wait.
 
 **Regarding Sleep and Shutdown:**
-The app uses NSAppleScript to send Apple Events to System Events
-(tell application "System Events" to sleep / shut down).
-This requires the `com.apple.security.temporary-exception.apple-events` entitlement
-targeting `com.apple.systemevents`, which is included in the entitlements file.
-macOS will show a standard system password/permission prompt if required.
+The Mac App Store build runs inside App Sandbox. In that build, the timer finishes with
+an on-device reminder instead of executing sleep or shutdown automatically, which avoids
+requiring Apple Events exceptions that are not appropriate for the sandboxed App Store target.
 
 **Note for reviewers:** To test without actually sleeping/shutting down the review machine,
 you may set a short timer and cancel it before it fires. The action only executes at t=0.

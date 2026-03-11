@@ -17,9 +17,28 @@ enum L {
     static let min            = "min"
     static let startTimer     = isSerbianLike ? "Pokreni tajmer"          : "Start Timer"
     static let cancel         = isSerbianLike ? "Otkaži"                  : "Cancel"
+    static let continueText   = isSerbianLike ? "Nastavi"                 : "Continue"
     static let alertButton_ok     = "OK"
     static let alertButton_cancel = isSerbianLike ? "Otkaži tajmer"       : "Cancel Timer"
     static let alertTitle     = appTitle
+    static let automationSetupTitle = appTitle
+    static let automationSetupBody = isSerbianLike
+        ? "Easy Sleep & Shutdown treba Automation dozvolu za kontrolu aplikacije System Events kako bi mogao da uspava ili ugasi Mac kada tajmer istekne."
+        : "Easy Sleep & Shutdown needs Automation permission to control System Events so it can sleep or shut down your Mac when the timer ends."
+    static let automationDeniedTitle = isSerbianLike ? "Dozvola je potrebna" : "Permission Required"
+    static let automationDeniedBody = isSerbianLike
+        ? "Bez Automation dozvole tajmer ne moze da izvrsi sleep ili shutdown akciju. Dozvolu mozete odobriti u System Settings > Privacy & Security > Automation."
+        : "Without Automation permission, the timer cannot perform sleep or shutdown. You can allow it in System Settings > Privacy & Security > Automation."
+    static let sandboxNotice  = isSerbianLike
+        ? "Gašenje u sandbox modu može zahtevati potvrdu sistema."
+        : "Shutdown in sandboxed builds may require system confirmation."
+    static let shutdownNotice = isSerbianLike
+        ? "macOS će prikazati dijalog za potvrdu."
+        : "macOS will show a shutdown confirmation."
+    static let sandboxAlertTitle = isSerbianLike ? "Tajmer završen" : "Timer Finished"
+    static let sandboxAlertBody = isSerbianLike
+        ? "App Sandbox blokira automatsko uspavljivanje i gašenje sistema. Ovaj build može samo da vas podseti da ručno pokrenete akciju."
+        : "App Sandbox blocks automatic system sleep and shutdown. This build can only remind you to trigger the action manually."
 
     // About panel
     static let aboutTitle     = isSerbianLike ? "O aplikaciji"            : "About"

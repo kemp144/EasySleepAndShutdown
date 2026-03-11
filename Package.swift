@@ -9,7 +9,10 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "EasySleepShutdown",
-            path: "Sources/EasySleepShutdown"
+            path: "Sources/EasySleepShutdown",
+            resources: [
+                .process("Assets.xcassets")
+            ]
         )
     ]
 )

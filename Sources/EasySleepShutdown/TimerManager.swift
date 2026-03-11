@@ -1,5 +1,8 @@
 import AppKit
 import Foundation
+import IOKit
+import IOKit.pwr_mgt
+import Security
 
 /// The action to perform when the timer fires.
 enum SleepAction: String, CaseIterable, Identifiable {
@@ -14,9 +17,13 @@ enum SleepAction: String, CaseIterable, Identifiable {
     }
 }
 
-/// Manages the countdown timer and executes the chosen action via NSAppleScript.
-/// NSAppleScript is App Sandbox compatible with the apple-events temporary exception entitlement.
+/// Manages the countdown timer and executes the chosen action.
+/// Sandboxed builds fall back to a reminder because controlling system sleep or shutdown
+/// through System Events is not Mac App Store safe.
 final class TimerManager: ObservableObject {
+    private enum DefaultsKey {
+        static let automationPermissionConfirmed = "automationPermissionConfirmed"
+    }
 
     // MARK: - Published state
 
@@ -30,8 +37,14 @@ final class TimerManager: ObservableObject {
     private var timer: Timer?
     private weak var statusItem: NSStatusItem?
     private var warningShown = false
+    private var automationPermissionConfirmed = UserDefaults.standard.bool(
+        forKey: DefaultsKey.automationPermissionConfirmed
+    )
+    private let isSandboxed = SandboxState.isEnabled
 
     let timeOptions: [Int] = [5, 10, 15, 20, 30, 45, 60, 90, 120]
+    /// Sleep works in sandbox via IOKit; shutdown may fall back to a reminder.
+    var usesSandboxFallback: Bool { isSandboxed && selectedAction == .shutdown }
 
     // MARK: - Init
 
@@ -46,6 +59,10 @@ final class TimerManager: ObservableObject {
     // MARK: - Timer control
 
     func start() {
+        guard prepareAutomationPermissionIfNeeded() else {
+            return
+        }
+
         remainingSeconds = selectedMinutes * 60
         warningShown = false
         isRunning = true
@@ -54,6 +71,10 @@ final class TimerManager: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             self?.tick()
         }
+    }
+
+    func preloadAutomationPermissionIfNeeded() {
+        _ = prepareAutomationPermissionIfNeeded()
     }
 
     func cancel() {
@@ -118,26 +139,151 @@ final class TimerManager: ObservableObject {
         }
     }
 
-    /// Izvršava akciju putem NSAppleScript.
-    /// NSAppleScript je App Sandbox kompatibilan uz 'apple-events' temporary exception entitlement.
-    /// Process() / osascript su zabranjeni pod App Sandbox i nisu dozvoljeni na Mac App Store-u.
+    private func prepareAutomationPermissionIfNeeded() -> Bool {
+        guard !isSandboxed else {
+            return true
+        }
+
+        if automationPermissionConfirmed {
+            return true
+        }
+
+        if Thread.isMainThread {
+            return requestAutomationPermission()
+        }
+
+        var granted = false
+        DispatchQueue.main.sync {
+            granted = requestAutomationPermission()
+        }
+        return granted
+    }
+
+    private func requestAutomationPermission() -> Bool {
+        NSApplication.shared.activate(ignoringOtherApps: true)
+
+        let alert = NSAlert()
+        alert.messageText = L.automationSetupTitle
+        alert.informativeText = L.automationSetupBody
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: L.continueText)
+        alert.addButton(withTitle: L.cancel)
+
+        guard alert.runModal() == .alertFirstButtonReturn else {
+            return false
+        }
+
+        var errorInfo: NSDictionary?
+        let script = NSAppleScript(source: "tell application \"System Events\" to activate")
+        script?.executeAndReturnError(&errorInfo)
+
+        if errorInfo == nil {
+            automationPermissionConfirmed = true
+            UserDefaults.standard.set(true, forKey: DefaultsKey.automationPermissionConfirmed)
+            return true
+        }
+
+        showAutomationPermissionDeniedAlert()
+        return false
+    }
+
     private func executeAction() {
         cancel()
 
-        let source: String
         switch selectedAction {
         case .sleep:
-            source = "tell application \"System Events\" to sleep"
+            performSleep()
         case .shutdown:
-            source = "tell application \"System Events\" to shut down"
+            performShutdown()
         }
+    }
 
-        // NSAppleScript mora da se izvršava na main threadu.
-        // Blokiranje je prihvatljivo jer sistem odmah prelazi u sleep/shutdown.
-        DispatchQueue.main.async {
+    /// Sleep via IOKit — works even inside App Sandbox.
+    private func performSleep() {
+        let port = IOPMFindPowerManagement(mach_port_t(0))
+        guard port != 0 else {
+            showSandboxFallbackAlert()
+            return
+        }
+        let result = IOPMSleepSystem(port)
+        IOServiceClose(port)
+        if result != kIOReturnSuccess {
+            // IOKit failed — fall back to AppleScript (non-sandbox) or alert
+            if !isSandboxed {
+                runAppleScript("tell application \"System Events\" to sleep")
+            } else {
+                showSandboxFallbackAlert()
+            }
+        }
+    }
+
+    /// Shutdown — try AppleScript via Finder first (works in some sandbox configs),
+    /// then System Events (non-sandbox), then fallback alert.
+    private func performShutdown() {
+        if isSandboxed {
+            // Try sending shutdown via loginwindow Apple Event
+            let sent = runAppleScript(
+                "tell application \"loginwindow\" to «event aevtrsdn»"
+            )
+            if !sent {
+                showSandboxFallbackAlert()
+            }
+        } else {
+            runAppleScript("tell application \"System Events\" to shut down")
+        }
+    }
+
+    @discardableResult
+    private func runAppleScript(_ source: String) -> Bool {
+        var success = false
+        let work = {
             var errorInfo: NSDictionary?
             let script = NSAppleScript(source: source)
             script?.executeAndReturnError(&errorInfo)
+            success = (errorInfo == nil)
         }
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.sync { work() }
+        }
+        return success
+    }
+
+    private func showAutomationPermissionDeniedAlert() {
+        let alert = NSAlert()
+        alert.messageText = L.automationDeniedTitle
+        alert.informativeText = L.automationDeniedBody
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: L.alertButton_ok)
+        alert.runModal()
+    }
+
+    private func showSandboxFallbackAlert() {
+        DispatchQueue.main.async {
+            NSApplication.shared.activate(ignoringOtherApps: true)
+            let alert = NSAlert()
+            alert.messageText = L.sandboxAlertTitle
+            alert.informativeText = L.sandboxAlertBody
+            alert.alertStyle = .informational
+            alert.addButton(withTitle: L.alertButton_ok)
+            alert.runModal()
+        }
+    }
+}
+
+private enum SandboxState {
+    static var isEnabled: Bool {
+        guard let task = SecTaskCreateFromSelf(nil) else {
+            return false
+        }
+
+        let entitlement = SecTaskCopyValueForEntitlement(
+            task,
+            "com.apple.security.app-sandbox" as CFString,
+            nil
+        )
+
+        return entitlement as? Bool == true
     }
 }

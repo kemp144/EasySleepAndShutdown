@@ -100,6 +100,15 @@ struct ContentView: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
 
+            if timerManager.selectedAction == .shutdown {
+                Text(L.shutdownNotice)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
             Button(action: timerManager.start) {
                 Text(L.startTimer)
                     .bold()
@@ -109,6 +118,9 @@ struct ContentView: View {
             .tint(.green)
             .controlSize(.large)
             .disabled(timerManager.selectedMinutes <= 0)
+        }
+        .onAppear {
+            timerManager.preloadAutomationPermissionIfNeeded()
         }
     }
 
