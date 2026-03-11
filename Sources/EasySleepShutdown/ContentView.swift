@@ -1,16 +1,40 @@
+import AppKit
 import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var timerManager: TimerManager
 
+    @State private var selectedAction: SleepAction
+    @State private var selectedMinutes: Int
+    @State private var oneSecondTimer: Bool
     @State private var customInput: String = ""
     @State private var useCustom: Bool = false
     @State private var showAbout: Bool = false
-    @FocusState private var inputFocused: Bool
+
+    init(timerManager: TimerManager) {
+        self.timerManager = timerManager
+        _selectedAction = State(initialValue: timerManager.selectedAction)
+        _selectedMinutes = State(initialValue: timerManager.selectedMinutes)
+        _oneSecondTimer = State(initialValue: timerManager.oneSecondTimer)
+    }
 
     // App version read from bundle (works in .app bundle, fallback for swift run)
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+    }
+
+    private var customInputBinding: Binding<String> {
+        Binding(
+            get: { customInput },
+            set: { newValue in
+                let filtered = newValue.filter { $0.isNumber }
+                customInput = filtered
+
+                if let val = Int(filtered), val > 0 {
+                    selectedMinutes = val
+                }
+            }
+        )
     }
 
     var body: some View {
@@ -41,13 +65,17 @@ struct ContentView: View {
         }
         .padding(20)
         .frame(width: 280)
+        .onChange(of: useCustom) { enabled in
+            guard enabled else { return }
+            customInput = "\(selectedMinutes)"
+        }
     }
 
     // MARK: - Setup UI
 
     private var setupView: some View {
         VStack(spacing: 14) {
-            Picker("", selection: $timerManager.selectedAction) {
+            Picker("", selection: $selectedAction) {
                 ForEach(SleepAction.allCases) { action in
                     Text(action.label).tag(action)
                 }
@@ -70,23 +98,14 @@ struct ContentView: View {
 
                 if useCustom {
                     HStack {
-                        TextField(L.placeholder, text: $customInput)
+                        TextField(L.placeholder, text: customInputBinding)
                             .textFieldStyle(.roundedBorder)
-                            .focused($inputFocused)
                             .onSubmit { applyCustomInput() }
-                            .onChange(of: customInput) { newVal in
-                                customInput = newVal.filter { $0.isNumber }
-                                applyCustomInput()
-                            }
                         Text(L.min)
                             .foregroundColor(.secondary)
                     }
-                    .onAppear {
-                        customInput = "\(timerManager.selectedMinutes)"
-                        inputFocused = true
-                    }
                 } else {
-                    Picker("", selection: $timerManager.selectedMinutes) {
+                    Picker("", selection: $selectedMinutes) {
                         ForEach(timerManager.timeOptions, id: \.self) { min in
                             Text("\(min) min").tag(min)
                         }
@@ -96,20 +115,21 @@ struct ContentView: View {
                 }
             }
 
-            Text(L.willStartIn(timerManager.selectedMinutes))
+            HStack {
+                Text(L.testMode)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
+                Toggle("", isOn: $oneSecondTimer)
+                    .toggleStyle(.switch)
+                    .controlSize(.mini)
+            }
+
+            Text(oneSecondTimer ? L.willStartInOneSecond : L.willStartIn(selectedMinutes))
                 .font(.caption)
                 .foregroundColor(.secondary)
 
-            if timerManager.selectedAction == .shutdown {
-                Text(L.shutdownNotice)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Button(action: timerManager.start) {
+            Button(action: startTimer) {
                 Text(L.startTimer)
                     .bold()
                     .frame(maxWidth: .infinity)
@@ -117,10 +137,14 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
             .tint(.green)
             .controlSize(.large)
-            .disabled(timerManager.selectedMinutes <= 0)
-        }
-        .onAppear {
-            timerManager.preloadAutomationPermissionIfNeeded()
+            .disabled(selectedMinutes <= 0)
+
+            Button(action: quitApp) {
+                Text(L.quitApp)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.regular)
         }
     }
 
@@ -145,6 +169,13 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
             .tint(.red)
             .controlSize(.large)
+
+            Button(action: quitApp) {
+                Text(L.quitApp)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.regular)
         }
     }
 
@@ -180,8 +211,19 @@ struct ContentView: View {
 
     private func applyCustomInput() {
         if let val = Int(customInput), val > 0 {
-            timerManager.selectedMinutes = val
+            selectedMinutes = val
         }
+    }
+
+    private func startTimer() {
+        timerManager.selectedAction = selectedAction
+        timerManager.selectedMinutes = selectedMinutes
+        timerManager.oneSecondTimer = oneSecondTimer
+        timerManager.start()
+    }
+
+    private func quitApp() {
+        NSApplication.shared.terminate(nil)
     }
 
     private var formattedTime: String {

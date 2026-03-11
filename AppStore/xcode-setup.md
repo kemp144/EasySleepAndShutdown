@@ -31,11 +31,13 @@ Use the generated `.xcodeproj` for signing, archive, and App Store submission.
   - Enable "Automatically manage signing"
   - Click "+ Capability" → add **App Sandbox**
   - Under App Sandbox, enable NO additional checkboxes for this App Store build
+- Debug/local runs should stay unsandboxed so sleep/shutdown can execute normally during development
 
 ## 3. Link the entitlements file
 - Build Settings → search "Code Signing Entitlements"
-- Set value to: `EasySleepShutdown.entitlements`
-- The generated project already points to this file, but verify it once in Xcode
+- `Debug` should point to: `EasySleepShutdown.Debug.entitlements`
+- `Release` should point to: `EasySleepShutdown.entitlements`
+- The generated project already sets these values, but verify them once in Xcode
 
 ## 4. App Icon
 - `Assets.xcassets` is already present in the repo

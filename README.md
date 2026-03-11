@@ -25,7 +25,7 @@ MIT
 3. [x] Otvori projekat u Xcode-u (`EasySleepAndShutdown.xcodeproj`; fallback je `Package.swift` samo za lokalni dev)
 4. [x] Postavi Bundle ID, Team, version 1.0.0, build 1
 5. [x] Uključi App Sandbox i poveži EasySleepShutdown.entitlements
-6. [ ] Proveri signing + Release build
+6. [ x] Proveri signing + Release build
 7. [ ] Product → Archive
 8. [ ] Distribute App → App Store Connect → Upload
 9. [ ] App Store Connect: izaberi uploaded build za ovu verziju

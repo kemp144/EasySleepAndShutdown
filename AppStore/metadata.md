@@ -81,9 +81,9 @@ Secondary: Productivity
 7. To test the 1-minute warning: set a 1 or 2 minute timer and wait.
 
 **Regarding Sleep and Shutdown:**
-The Mac App Store build runs inside App Sandbox. In that build, the timer finishes with
-an on-device reminder instead of executing sleep or shutdown automatically, which avoids
-requiring Apple Events exceptions that are not appropriate for the sandboxed App Store target.
+The app uses system APIs for sleep and an Apple Event directed to `loginwindow`
+for shutdown. The App Store build includes the Apple Events temporary exception
+needed for that shutdown request path.
 
 **Note for reviewers:** To test without actually sleeping/shutting down the review machine,
 you may set a short timer and cancel it before it fires. The action only executes at t=0.

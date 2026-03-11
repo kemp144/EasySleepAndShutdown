@@ -2,60 +2,88 @@ import AppKit
 import SwiftUI
 import Combine
 
-/// Sets up the NSStatusItem (menu bar icon) and the NSPopover that contains the SwiftUI UI.
-final class AppDelegate: NSObject, NSApplicationDelegate {
+/// Sets up the status item and a regular app window for the SwiftUI UI.
+final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     private var statusItem: NSStatusItem!
-    private var popover: NSPopover!
+    private var window: NSWindow!
     private var timerManager: TimerManager!
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - App lifecycle
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // 1. Create the shared timer manager.
         timerManager = TimerManager()
 
-        // 2. Create the status bar item (fixed width = icon + optional countdown text).
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         timerManager.setStatusItem(statusItem)
 
-        // Configure the button shown in the menu bar.
         if let button = statusItem.button {
             let image = NSImage(systemSymbolName: "powersleep", accessibilityDescription: "Easy Sleep & Shutdown")
-            image?.isTemplate = true   // adapts to light/dark menu bar automatically
+            image?.isTemplate = true
             button.image = image
-            button.action = #selector(togglePopover)
+            button.action = #selector(toggleWindow)
             button.target = self
         }
 
-        // 3. Create and configure the popover.
-        popover = NSPopover()
-        popover.contentSize = NSSize(width: 280, height: 260)
-        popover.behavior = .transient
-        popover.animates = true
-        popover.contentViewController = NSHostingController(
+        let hostingController = NSHostingController(
             rootView: ContentView(timerManager: timerManager)
         )
 
-        // Zatvori popover čim timer krene — app radi tiho u pozadini.
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 320, height: 320),
+            styleMask: [.titled, .closable, .miniaturizable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Easy Sleep & Shutdown"
+        window.contentViewController = hostingController
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.delegate = self
+        self.window = window
+
         timerManager.$isRunning
             .filter { $0 == true }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in self?.popover.performClose(nil) }
+            .sink { [weak self] _ in
+                DispatchQueue.main.async { [weak self] in
+                    self?.closeWindow()
+                }
+            }
             .store(in: &cancellables)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+            self?.openWindow()
+        }
     }
 
-    // MARK: - Popover toggle
+    // MARK: - Window control
 
-    @objc private func togglePopover() {
-        guard let button = statusItem.button else { return }
-
-        if popover.isShown {
-            popover.performClose(nil)
+    @objc private func toggleWindow() {
+        if window.isVisible {
+            closeWindow()
         } else {
-            popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-            NSApplication.shared.activate(ignoringOtherApps: true)
+            openWindow()
         }
+    }
+
+    private func openWindow() {
+        DispatchQueue.main.async { [weak self] in
+            self?.window.makeKeyAndOrderFront(nil)
+        }
+    }
+
+    private func closeWindow() {
+        window.orderOut(nil)
+    }
+
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+        closeWindow()
+        return false
+    }
+
+    func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+        true
     }
 }

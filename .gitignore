@@ -11,8 +11,18 @@ Thumbs.db
 # Build output
 dist/
 build/
+.build/
+DerivedData/
 *.exe
 *.out
+
+# Xcode
+.swiftpm/
+*.xcworkspace
+!*.xcworkspace/contents.xcworkspacedata
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcuserstate
 
 # Logs
 *.log

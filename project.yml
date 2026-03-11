@@ -19,11 +19,16 @@ settings:
     SWIFT_VERSION: 5.7
     GENERATE_INFOPLIST_FILE: NO
     INFOPLIST_FILE: Resources/Info.plist
-    CODE_SIGN_ENTITLEMENTS: EasySleepShutdown.entitlements
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     CODE_SIGN_STYLE: Automatic
-    ENABLE_APP_SANDBOX: YES
     DEVELOPMENT_TEAM: ""
+  configs:
+    Debug:
+      CODE_SIGN_ENTITLEMENTS: EasySleepShutdown.Debug.entitlements
+      ENABLE_APP_SANDBOX: NO
+    Release:
+      CODE_SIGN_ENTITLEMENTS: EasySleepShutdown.entitlements
+      ENABLE_APP_SANDBOX: YES
 
 targets:
   EasySleepShutdown:
@@ -35,8 +40,6 @@ targets:
       - Resources/Assets.xcassets
     info:
       path: Resources/Info.plist
-    entitlements:
-      path: EasySleepShutdown.entitlements
     settings:
       base:
         PRODUCT_MODULE_NAME: EasySleepShutdown

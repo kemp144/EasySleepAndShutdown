@@ -18,8 +18,6 @@ enum SleepAction: String, CaseIterable, Identifiable {
 }
 
 /// Manages the countdown timer and executes the chosen action.
-/// Sandboxed builds fall back to a reminder because controlling system sleep or shutdown
-/// through System Events is not Mac App Store safe.
 final class TimerManager: ObservableObject {
     private enum DefaultsKey {
         static let automationPermissionConfirmed = "automationPermissionConfirmed"
@@ -31,6 +29,7 @@ final class TimerManager: ObservableObject {
     @Published var remainingSeconds: Int = 0
     @Published var selectedAction: SleepAction = .sleep
     @Published var selectedMinutes: Int = 15
+    @Published var oneSecondTimer: Bool = false
 
     // MARK: - Private
 
@@ -43,9 +42,6 @@ final class TimerManager: ObservableObject {
     private let isSandboxed = SandboxState.isEnabled
 
     let timeOptions: [Int] = [5, 10, 15, 20, 30, 45, 60, 90, 120]
-    /// Sleep works in sandbox via IOKit; shutdown may fall back to a reminder.
-    var usesSandboxFallback: Bool { isSandboxed && selectedAction == .shutdown }
-
     // MARK: - Init
 
     init(statusItem: NSStatusItem? = nil) {
@@ -59,11 +55,11 @@ final class TimerManager: ObservableObject {
     // MARK: - Timer control
 
     func start() {
-        guard prepareAutomationPermissionIfNeeded() else {
+        guard prepareAutomationPermissionIfNeeded(for: selectedAction) else {
             return
         }
 
-        remainingSeconds = selectedMinutes * 60
+        remainingSeconds = oneSecondTimer ? 1 : selectedMinutes * 60
         warningShown = false
         isRunning = true
         updateMenuBarTitle()
@@ -74,7 +70,7 @@ final class TimerManager: ObservableObject {
     }
 
     func preloadAutomationPermissionIfNeeded() {
-        _ = prepareAutomationPermissionIfNeeded()
+        _ = prepareAutomationPermissionIfNeeded(for: selectedAction)
     }
 
     func cancel() {
@@ -139,7 +135,11 @@ final class TimerManager: ObservableObject {
         }
     }
 
-    private func prepareAutomationPermissionIfNeeded() -> Bool {
+    private func prepareAutomationPermissionIfNeeded(for action: SleepAction) -> Bool {
+        guard action == .sleep else {
+            return true
+        }
+
         guard !isSandboxed else {
             return true
         }
@@ -217,37 +217,15 @@ final class TimerManager: ObservableObject {
         }
     }
 
-    /// Shutdown — try AppleScript via Finder first (works in some sandbox configs),
-    /// then System Events (non-sandbox), then fallback alert.
+    /// Shutdown mirrors older utilities like iShutdown
+    /// by sending the Apple Event directly to loginwindow.
     private func performShutdown() {
-        if isSandboxed {
-            // Try sending shutdown via loginwindow Apple Event
-            let sent = runAppleScript(
-                "tell application \"loginwindow\" to «event aevtrsdn»"
-            )
-            if !sent {
-                showSandboxFallbackAlert()
-            }
-        } else {
-            runAppleScript("tell application \"System Events\" to shut down")
+        let sent = runAppleScript(
+            "tell application \"loginwindow\" to «event aevtrsdn»"
+        )
+        if !sent {
+            showShutdownUnavailableAlert()
         }
-    }
-
-    @discardableResult
-    private func runAppleScript(_ source: String) -> Bool {
-        var success = false
-        let work = {
-            var errorInfo: NSDictionary?
-            let script = NSAppleScript(source: source)
-            script?.executeAndReturnError(&errorInfo)
-            success = (errorInfo == nil)
-        }
-        if Thread.isMainThread {
-            work()
-        } else {
-            DispatchQueue.main.sync { work() }
-        }
-        return success
     }
 
     private func showAutomationPermissionDeniedAlert() {
@@ -269,6 +247,35 @@ final class TimerManager: ObservableObject {
             alert.addButton(withTitle: L.alertButton_ok)
             alert.runModal()
         }
+    }
+
+    private func showShutdownUnavailableAlert() {
+        DispatchQueue.main.async {
+            NSApplication.shared.activate(ignoringOtherApps: true)
+            let alert = NSAlert()
+            alert.messageText = L.shutdownUnavailableTitle
+            alert.informativeText = L.shutdownUnavailableBody
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: L.alertButton_ok)
+            alert.runModal()
+        }
+    }
+
+    @discardableResult
+    private func runAppleScript(_ source: String) -> Bool {
+        var success = false
+        let work = {
+            var errorInfo: NSDictionary?
+            let script = NSAppleScript(source: source)
+            script?.executeAndReturnError(&errorInfo)
+            success = (errorInfo == nil)
+        }
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.sync { work() }
+        }
+        return success
     }
 }
 

@@ -5,12 +5,6 @@
 	<!-- Required for Mac App Store -->
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
-
-	<!--
-		Temporary exception: allows sending Apple Events to loginwindow
-		for shutdown. Sleep uses IOKit (no exception needed).
-		Must be justified in App Review notes.
-	-->
 	<key>com.apple.security.temporary-exception.apple-events</key>
 	<array>
 		<string>com.apple.loginwindow</string>

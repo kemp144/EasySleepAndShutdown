@@ -13,10 +13,12 @@ enum L {
     static let shutdown       = isSerbianLike ? "Gašenje"                 : "Shutdown"
     static let manualLabel    = isSerbianLike ? "Vreme (min)"             : "Time (min)"
     static let manualToggle   = isSerbianLike ? "Ručno"                   : "Custom"
+    static let testMode       = isSerbianLike ? "1 sekunda"               : "1 second"
     static let placeholder    = isSerbianLike ? "npr. 25"                 : "e.g. 25"
     static let min            = "min"
     static let startTimer     = isSerbianLike ? "Pokreni tajmer"          : "Start Timer"
     static let cancel         = isSerbianLike ? "Otkaži"                  : "Cancel"
+    static let quitApp        = isSerbianLike ? "Ugasi program"           : "Quit App"
     static let continueText   = isSerbianLike ? "Nastavi"                 : "Continue"
     static let alertButton_ok     = "OK"
     static let alertButton_cancel = isSerbianLike ? "Otkaži tajmer"       : "Cancel Timer"
@@ -29,16 +31,14 @@ enum L {
     static let automationDeniedBody = isSerbianLike
         ? "Bez Automation dozvole tajmer ne moze da izvrsi sleep ili shutdown akciju. Dozvolu mozete odobriti u System Settings > Privacy & Security > Automation."
         : "Without Automation permission, the timer cannot perform sleep or shutdown. You can allow it in System Settings > Privacy & Security > Automation."
-    static let sandboxNotice  = isSerbianLike
-        ? "Gašenje u sandbox modu može zahtevati potvrdu sistema."
-        : "Shutdown in sandboxed builds may require system confirmation."
-    static let shutdownNotice = isSerbianLike
-        ? "macOS će prikazati dijalog za potvrdu."
-        : "macOS will show a shutdown confirmation."
     static let sandboxAlertTitle = isSerbianLike ? "Tajmer završen" : "Timer Finished"
     static let sandboxAlertBody = isSerbianLike
-        ? "App Sandbox blokira automatsko uspavljivanje i gašenje sistema. Ovaj build može samo da vas podseti da ručno pokrenete akciju."
-        : "App Sandbox blocks automatic system sleep and shutdown. This build can only remind you to trigger the action manually."
+        ? "Ovaj build nije uspeo da automatski pokrene sistemsku akciju. Pokrenite je ručno."
+        : "This build could not trigger the system action automatically. Please trigger it manually."
+    static let shutdownUnavailableTitle = isSerbianLike ? "Gašenje nije uspelo" : "Shutdown Failed"
+    static let shutdownUnavailableBody = isSerbianLike
+        ? "Sistemski shutdown zahtev nije prošao. Proverite da li je build potpisan sa odgovarajućim entitlement-om i da li je macOS dozvolio ovu akciju."
+        : "The system shutdown request did not succeed. Verify that the build is signed with the required entitlement and that macOS allowed the action."
 
     // About panel
     static let aboutTitle     = isSerbianLike ? "O aplikaciji"            : "About"
@@ -52,6 +52,10 @@ enum L {
             ? "Aktiviraće se za \(minutes) min"
             : "Will trigger in \(minutes) min"
     }
+
+    static let willStartInOneSecond = isSerbianLike
+        ? "Aktiviraće se za 1 sekundu"
+        : "Will trigger in 1 second"
 
     static func alertBody(_ action: SleepAction) -> String {
         let actionName = action == .sleep
