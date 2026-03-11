@@ -1,8 +1,8 @@
 import AppKit
+import Carbon
 import Foundation
 import IOKit
 import IOKit.pwr_mgt
-import Security
 
 /// The action to perform when the timer fires.
 enum SleepAction: String, CaseIterable, Identifiable {
@@ -19,27 +19,18 @@ enum SleepAction: String, CaseIterable, Identifiable {
 
 /// Manages the countdown timer and executes the chosen action.
 final class TimerManager: ObservableObject {
-    private enum DefaultsKey {
-        static let automationPermissionConfirmed = "automationPermissionConfirmed"
-    }
-
     // MARK: - Published state
 
     @Published var isRunning: Bool = false
+    @Published var isPreparingStart: Bool = false
     @Published var remainingSeconds: Int = 0
     @Published var selectedAction: SleepAction = .sleep
     @Published var selectedMinutes: Int = 15
-    @Published var oneSecondTimer: Bool = false
 
     // MARK: - Private
 
     private var timer: Timer?
     private weak var statusItem: NSStatusItem?
-    private var warningShown = false
-    private var automationPermissionConfirmed = UserDefaults.standard.bool(
-        forKey: DefaultsKey.automationPermissionConfirmed
-    )
-    private let isSandboxed = SandboxState.isEnabled
 
     let timeOptions: [Int] = [5, 10, 15, 20, 30, 45, 60, 90, 120]
     // MARK: - Init
@@ -54,9 +45,33 @@ final class TimerManager: ObservableObject {
 
     // MARK: - Timer control
 
+    func startFromUserIntent() {
+        guard !isRunning, !isPreparingStart else {
+            return
+        }
+
+        if selectedAction == .shutdown {
+            isPreparingStart = true
+            requestShutdownPermission { [weak self] granted in
+                guard let self else { return }
+                self.isPreparingStart = false
+
+                guard granted else {
+                    return
+                }
+
+                self.start()
+            }
+            return
+        }
+
+        start()
+    }
+
     func start() {
-        remainingSeconds = selectedMinutes * 60
-        warningShown = false
+        timer?.invalidate()
+        timer = nil
+        remainingSeconds = max(1, selectedMinutes) * 60
         isRunning = true
         updateMenuBarTitle()
 
@@ -65,16 +80,11 @@ final class TimerManager: ObservableObject {
         }
     }
 
-    func preloadAutomationPermissionIfNeeded() {
-        _ = prepareAutomationPermissionIfNeeded(for: selectedAction)
-    }
-
     func cancel() {
         timer?.invalidate()
         timer = nil
         isRunning = false
         remainingSeconds = 0
-        warningShown = false
         resetMenuBarTitle()
     }
 
@@ -85,13 +95,9 @@ final class TimerManager: ObservableObject {
             executeAction()
             return
         }
+
         remainingSeconds -= 1
         updateMenuBarTitle()
-
-        if remainingSeconds == 60 && !warningShown {
-            warningShown = true
-            showWarningAlert()
-        }
     }
 
     private func updateMenuBarTitle() {
@@ -114,71 +120,6 @@ final class TimerManager: ObservableObject {
         }
     }
 
-    private func showWarningAlert() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            NSApplication.shared.activate(ignoringOtherApps: true)
-            let alert = NSAlert()
-            alert.messageText = L.alertTitle
-            alert.informativeText = L.alertBody(self.selectedAction)
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: L.alertButton_ok)
-            alert.addButton(withTitle: L.alertButton_cancel)
-            let response = alert.runModal()
-            if response == .alertSecondButtonReturn {
-                self.cancel()
-            }
-        }
-    }
-
-    private func prepareAutomationPermissionIfNeeded(for action: SleepAction) -> Bool {
-        guard !isSandboxed else {
-            return true
-        }
-
-        if automationPermissionConfirmed {
-            return true
-        }
-
-        if Thread.isMainThread {
-            return requestAutomationPermission()
-        }
-
-        var granted = false
-        DispatchQueue.main.sync {
-            granted = requestAutomationPermission()
-        }
-        return granted
-    }
-
-    private func requestAutomationPermission() -> Bool {
-        NSApplication.shared.activate(ignoringOtherApps: true)
-
-        let alert = NSAlert()
-        alert.messageText = L.automationSetupTitle
-        alert.informativeText = L.automationSetupBody
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: L.continueText)
-        alert.addButton(withTitle: L.cancel)
-
-        guard alert.runModal() == .alertFirstButtonReturn else {
-            return false
-        }
-
-        var errorInfo: NSDictionary?
-        let script = NSAppleScript(source: "tell application \"System Events\" to activate")
-        script?.executeAndReturnError(&errorInfo)
-
-        if errorInfo == nil {
-            automationPermissionConfirmed = true
-            UserDefaults.standard.set(true, forKey: DefaultsKey.automationPermissionConfirmed)
-            return true
-        }
-
-        showAutomationPermissionDeniedAlert()
-        return false
-    }
-
     private func executeAction() {
         cancel()
 
@@ -194,18 +135,13 @@ final class TimerManager: ObservableObject {
     private func performSleep() {
         let port = IOPMFindPowerManagement(mach_port_t(0))
         guard port != 0 else {
-            showSandboxFallbackAlert()
+            showSleepUnavailableAlert()
             return
         }
         let result = IOPMSleepSystem(port)
         IOServiceClose(port)
         if result != kIOReturnSuccess {
-            // IOKit failed — fall back to AppleScript (non-sandbox) or alert
-            if !isSandboxed {
-                runAppleScript("tell application \"System Events\" to sleep")
-            } else {
-                showSandboxFallbackAlert()
-            }
+            showSleepUnavailableAlert()
         }
     }
 
@@ -260,13 +196,13 @@ final class TimerManager: ObservableObject {
         alert.runModal()
     }
 
-    private func showSandboxFallbackAlert() {
+    private func showSleepUnavailableAlert() {
         DispatchQueue.main.async {
             NSApplication.shared.activate(ignoringOtherApps: true)
             let alert = NSAlert()
-            alert.messageText = L.sandboxAlertTitle
-            alert.informativeText = L.sandboxAlertBody
-            alert.alertStyle = .informational
+            alert.messageText = L.sleepUnavailableTitle
+            alert.informativeText = L.sleepUnavailableBody
+            alert.alertStyle = .warning
             alert.addButton(withTitle: L.alertButton_ok)
             alert.runModal()
         }
@@ -284,36 +220,38 @@ final class TimerManager: ObservableObject {
         }
     }
 
-    @discardableResult
-    private func runAppleScript(_ source: String) -> Bool {
-        var success = false
-        let work = {
-            var errorInfo: NSDictionary?
-            let script = NSAppleScript(source: source)
-            script?.executeAndReturnError(&errorInfo)
-            success = (errorInfo == nil)
-        }
-        if Thread.isMainThread {
-            work()
-        } else {
-            DispatchQueue.main.sync { work() }
-        }
-        return success
-    }
-}
+    private func requestShutdownPermission(completion: @escaping (Bool) -> Void) {
+        let target = NSAppleEventDescriptor(bundleIdentifier: "com.apple.loginwindow")
 
-private enum SandboxState {
-    static var isEnabled: Bool {
-        guard let task = SecTaskCreateFromSelf(nil) else {
-            return false
+        guard let aeDesc = target.aeDesc else {
+            DispatchQueue.main.async { [weak self] in
+                self?.showShutdownUnavailableAlert()
+                completion(false)
+            }
+            return
         }
 
-        let entitlement = SecTaskCopyValueForEntitlement(
-            task,
-            "com.apple.security.app-sandbox" as CFString,
-            nil
-        )
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let status = AEDeterminePermissionToAutomateTarget(
+                aeDesc,
+                AEEventClass(kCoreEventClass),
+                AEEventID(kAEShutDown),
+                true
+            )
 
-        return entitlement as? Bool == true
+            DispatchQueue.main.async {
+                switch status {
+                case noErr:
+                    completion(true)
+                case OSStatus(errAEEventNotPermitted), OSStatus(errAEEventWouldRequireUserConsent):
+                    self?.showAutomationPermissionDeniedAlert()
+                    completion(false)
+                default:
+                    NSLog("Automation permission check failed: %d", status)
+                    self?.showShutdownUnavailableAlert()
+                    completion(false)
+                }
+            }
+        }
     }
 }

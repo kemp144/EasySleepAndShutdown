@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1E6B1E82231ED285186C9F10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00943BA6BE2E0241F020889F /* Assets.xcassets */; };
+		24A3D47B6B2647E2B2D7601A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 40AA9A57DB16459F885EE6B5 /* PrivacyInfo.xcprivacy */; };
 		37B5904296F27A6DDFA71484 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84C1D19B676D7706AD86CAA /* AppDelegate.swift */; };
 		6A9A7B0EE0A78E5EDAC4C9FE /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D0AD6E6A15A5B701A2973 /* Strings.swift */; };
 		CAD0AEDE9913427C7B0989F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E2C2D7D5948FEBF9E1CD01 /* ContentView.swift */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		00943BA6BE2E0241F020889F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		40AA9A57DB16459F885EE6B5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Resources/PrivacyInfo.xcprivacy; sourceTree = SOURCE_ROOT; };
 		3C01BEE8AFCC7218618F48EF /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		6EB29C0F399C7BDB1BFB34B0 /* TimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerManager.swift; sourceTree = "<group>"; };
 		7B9D0AD6E6A15A5B701A2973 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 			children = (
 				2E38B5CAB8F85308712BFE16 /* Sources */,
 				19D7176334C0A713F51C37FF /* Products */,
+				40AA9A57DB16459F885EE6B5 /* PrivacyInfo.xcprivacy */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,6 +121,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E6B1E82231ED285186C9F10 /* Assets.xcassets in Resources */,
+				24A3D47B6B2647E2B2D7601A /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

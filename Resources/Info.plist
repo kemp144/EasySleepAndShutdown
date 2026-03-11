@@ -21,6 +21,6 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Easy Sleep &amp; Shutdown needs permission to send the system shutdown command when you start a shutdown timer.</string>
+	<string>Easy Sleep &amp; Shutdown needs permission to send the system shutdown request when you explicitly start a shutdown timer.</string>
 </dict>
 </plist>

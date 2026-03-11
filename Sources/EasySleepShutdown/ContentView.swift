@@ -51,6 +51,7 @@ struct ContentView: View {
                 }
                 .buttonStyle(.plain)
                 .help(L.aboutTitle)
+                .accessibilityLabel(Text(L.aboutTitle))
             }
             .padding(.bottom, 12)
 
@@ -119,14 +120,14 @@ struct ContentView: View {
                 .foregroundColor(.secondary)
 
             Button(action: startTimer) {
-                Text(L.startTimer)
+                Text(timerManager.isPreparingStart ? L.preparing : L.startTimer)
                     .bold()
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .tint(.green)
             .controlSize(.large)
-            .disabled(selectedMinutes <= 0)
+            .disabled(selectedMinutes <= 0 || timerManager.isPreparingStart)
 
             Button(action: quitApp) {
                 Text(L.quitApp)
@@ -134,7 +135,9 @@ struct ContentView: View {
             }
             .buttonStyle(.bordered)
             .controlSize(.regular)
+            .disabled(timerManager.isPreparingStart)
         }
+        .disabled(timerManager.isPreparingStart)
     }
 
     // MARK: - Active countdown UI (shown when user reopens popover)
@@ -207,8 +210,7 @@ struct ContentView: View {
     private func startTimer() {
         timerManager.selectedAction = selectedAction
         timerManager.selectedMinutes = selectedMinutes
-        timerManager.oneSecondTimer = false
-        timerManager.start()
+        timerManager.startFromUserIntent()
     }
 
     private func quitApp() {

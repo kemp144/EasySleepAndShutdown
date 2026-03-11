@@ -82,9 +82,7 @@ Secondary: Productivity
 7. To test the 1-minute warning: set a 1 or 2 minute timer and wait.
 
 **Regarding Sleep and Shutdown:**
-The app uses system APIs for sleep and an Apple Event directed to `loginwindow`
-for shutdown. The App Store build includes the Apple Events temporary exception
-needed for that shutdown request path.
+Sleep uses system power management APIs. Shutdown is only armed after the user explicitly selects "Shutdown" and presses Start. At that moment, the app may request Automation permission before starting the timer.
 
 **Note for reviewers:** To test without actually sleeping/shutting down the review machine,
 you may set a short timer and cancel it before it fires. The action only executes at t=0.

@@ -84,4 +84,4 @@ After archive:
 - [ ] App Store Connect: Build uploaded and processed
 - [ ] TestFlight: Test internally — confirm sleep action works, cancel works, 1-min alert works
 - [ ] TestFlight: Confirm shutdown works in the signed Release build with the loginwindow Apple Events entitlement
-- [ ] Submit for Review: Add App Review Notes explaining NSAppleScript usage
+- [ ] Submit for Review: Add App Review Notes explaining Apple Events usage for the shutdown option
