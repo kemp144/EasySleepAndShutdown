@@ -1,0 +1,81 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "EasySleepShutdown-arm64-apple-macosx26.0-debug.exe": ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.exe>"]
+  "EasySleepShutdown-arm64-apple-macosx26.0-debug.module": ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.exe>","<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>"]
+  "test": ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.exe>","<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown":
+    is-mutated: true
+commands:
+  "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown-entitlement.plist":
+    tool: write-auxiliary-file
+    inputs: ["<entitlement-plist>","<com.apple.security.get-task-allow>"]
+    outputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown-entitlement.plist"]
+    description: "Write auxiliary file /Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown-entitlement.plist"
+
+  "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/AppDelegate.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/ContentView.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/Strings.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/TimerManager.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/main.swift"]
+    outputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources"]
+    description: "Write auxiliary file /Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources"
+
+  "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/AppDelegate.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/ContentView.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/Strings.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/TimerManager.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/main.swift.o"]
+    outputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.product/Objects.LinkFileList"
+
+  "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+
+  "<EasySleepShutdown-arm64-apple-macosx26.0-debug.exe>":
+    tool: phony
+    inputs: ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.exe-CodeSigning>"]
+    outputs: ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.exe>"]
+
+  "<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/AppDelegate.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/ContentView.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/Strings.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/TimerManager.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/main.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/Modules/EasySleepShutdown.swiftmodule"]
+    outputs: ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>"]
+
+  "C.EasySleepShutdown-arm64-apple-macosx26.0-debug.exe":
+    tool: shell
+    inputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/AppDelegate.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/ContentView.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/Strings.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/TimerManager.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/main.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.product/Objects.LinkFileList"]
+    outputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/EasySleepShutdown"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug","-o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown","-module-name","EasySleepShutdown","-Xlinker","-no_warn_duplicate_libraries","-emit-executable","-Xlinker","-alias","-Xlinker","_EasySleepShutdown_main","-Xlinker","_main","-Xlinker","-rpath","-Xlinker","@loader_path","@/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.product/Objects.LinkFileList","-Xlinker","-rpath","-Xlinker","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-6.2/macosx","-target","arm64-apple-macosx12.0","-Xlinker","-add_ast_path","-Xlinker","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/Modules/EasySleepShutdown.swiftmodule","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "C.EasySleepShutdown-arm64-apple-macosx26.0-debug.exe-entitlements":
+    tool: shell
+    inputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown-entitlement.plist"]
+    outputs: ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.exe-CodeSigning>"]
+    description: "Applying debug entitlements to ./.build/arm64-apple-macosx/debug/EasySleepShutdown"
+    args: ["codesign","--force","--sign","-","--entitlements","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown-entitlement.plist","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown"]
+
+  "C.EasySleepShutdown-arm64-apple-macosx26.0-debug.module":
+    tool: shell
+    inputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/AppDelegate.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/ContentView.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/Strings.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/TimerManager.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/main.swift","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources"]
+    outputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/AppDelegate.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/ContentView.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/Strings.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/TimerManager.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/main.swift.o","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/Modules/EasySleepShutdown.swiftmodule"]
+    description: "Compiling Swift Module 'EasySleepShutdown' (5 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","EasySleepShutdown","-emit-dependencies","-emit-module","-emit-module-path","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/Modules/EasySleepShutdown.swiftmodule","-output-file-map","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/output-file-map.json","-incremental","-c","@/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources","-I","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx12.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","EasySleepShutdown_main","-swift-version","5","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/","/Users/robertengel/GIT/EasySleepAndShutdown/Package.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

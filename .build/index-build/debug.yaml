@@ -1,0 +1,47 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "EasySleepShutdown-arm64-apple-macosx26.0-debug.module": ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>"]
+  "test": ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/AppDelegate.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/ContentView.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/Strings.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/TimerManager.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/main.swift"]
+    outputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources"]
+    description: "Write auxiliary file /Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources"
+
+  "/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+
+  "<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/Modules/EasySleepShutdown.swiftmodule"]
+    outputs: ["<EasySleepShutdown-arm64-apple-macosx26.0-debug.module>"]
+
+  "C.EasySleepShutdown-arm64-apple-macosx26.0-debug.module":
+    tool: shell
+    inputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/AppDelegate.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/ContentView.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/Strings.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/TimerManager.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/main.swift","/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources"]
+    outputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/Modules/EasySleepShutdown.swiftmodule"]
+    description: "Compiling Swift Module 'EasySleepShutdown' (5 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","EasySleepShutdown","-emit-dependencies","-emit-module","-emit-module-path","/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/Modules/EasySleepShutdown.swiftmodule","-output-file-map","/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/EasySleepShutdown.build/output-file-map.json","-incremental","@/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/EasySleepShutdown.build/sources","-I","/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx12.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/robertengel/GIT/EasySleepAndShutdown/.build/index-build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","EasySleepShutdown_main","-swift-version","5","-Xfrontend","-experimental-lazy-typecheck","-Xfrontend","-experimental-skip-all-function-bodies","-Xfrontend","-experimental-allow-module-with-compiler-errors","-Xfrontend","-empty-abi-descriptor","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/","/Users/robertengel/GIT/EasySleepAndShutdown/Package.swift","/Users/robertengel/GIT/EasySleepAndShutdown/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

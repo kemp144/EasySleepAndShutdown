@@ -1,0 +1,40 @@
+{
+  "": {
+    "swift-dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/master.swiftdeps"
+  },
+  "/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/AppDelegate.swift": {
+    "dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/AppDelegate.d",
+    "object": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/AppDelegate.swift.o",
+    "swiftmodule": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/AppDelegate~partial.swiftmodule",
+    "swift-dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/AppDelegate.swiftdeps",
+    "diagnostics": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/AppDelegate.dia"
+  },
+  "/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/ContentView.swift": {
+    "dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/ContentView.d",
+    "object": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/ContentView.swift.o",
+    "swiftmodule": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/ContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/ContentView.swiftdeps",
+    "diagnostics": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/ContentView.dia"
+  },
+  "/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/Strings.swift": {
+    "dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/Strings.d",
+    "object": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/Strings.swift.o",
+    "swiftmodule": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/Strings~partial.swiftmodule",
+    "swift-dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/Strings.swiftdeps",
+    "diagnostics": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/Strings.dia"
+  },
+  "/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/TimerManager.swift": {
+    "dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/TimerManager.d",
+    "object": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/TimerManager.swift.o",
+    "swiftmodule": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/TimerManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/TimerManager.swiftdeps",
+    "diagnostics": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/TimerManager.dia"
+  },
+  "/Users/robertengel/GIT/EasySleepAndShutdown/Sources/EasySleepShutdown/main.swift": {
+    "dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/main.d",
+    "object": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/main.swift.o",
+    "swiftmodule": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/main.swiftdeps",
+    "diagnostics": "/Users/robertengel/GIT/EasySleepAndShutdown/.build/arm64-apple-macosx/debug/EasySleepShutdown.build/main.dia"
+  }
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Required for Mac App Store -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+
+    <!--
+        Temporary exception: allows sending Apple Events to System Events
+        without showing the user a permission dialog every time.
+        Required to trigger sleep and shutdown via NSAppleScript.
+        Must be justified in App Review notes.
+    -->
+    <key>com.apple.security.temporary-exception.apple-events</key>
+    <array>
+        <string>com.apple.systemevents</string>
+    </array>
+</dict>
+</plist>

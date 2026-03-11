@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.easysleepshutdown.app</string>
+
+    <!-- Path to the app binary inside /Applications -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Applications/Easy Sleep &amp; Shutdown.app/Contents/MacOS/EasySleepShutdown</string>
+    </array>
+
+    <!-- Launch automatically when the user logs in -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Restart if the app crashes -->
+    <key>KeepAlive</key>
+    <false/>
+</dict>
+</plist>
