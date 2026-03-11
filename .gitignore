@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build output
+dist/
+build/
+*.exe
+*.out
+
+# Logs
+*.log
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
