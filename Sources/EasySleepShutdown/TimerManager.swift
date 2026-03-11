@@ -210,35 +210,43 @@ final class TimerManager: ObservableObject {
         }
     }
 
-    /// Shutdown via loginwindow Apple Event — does not require System Events permission.
+    /// Shutdown by sending kAEShutDown Apple Event directly to loginwindow.
     private func performShutdown() {
-        // Method 1: Send kAEShutDown directly to loginwindow via AppleScript
-        var error1: NSDictionary?
-        let script1 = NSAppleScript(source:
-            "tell application \"loginwindow\" to «event aevtrsdn»"
-        )
-        script1?.executeAndReturnError(&error1)
-        if error1 == nil { return }
-        NSLog("loginwindow shutdown failed: %@", error1!)
+        let target = NSAppleEventDescriptor(bundleIdentifier: "com.apple.loginwindow")
 
-        // Method 2: Try System Events via NSAppleScript
-        var error2: NSDictionary?
-        let script2 = NSAppleScript(source:
-            "tell application \"System Events\" to shut down"
+        // kCoreEventClass = 'aevt', kAEShutDown = 'shut'
+        let event = NSAppleEventDescriptor.appleEvent(
+            withEventClass: AEEventClass(kCoreEventClass),
+            eventID: AEEventID(kAEShutDown),
+            targetDescriptor: target,
+            returnID: AEReturnID(kAutoGenerateReturnID),
+            transactionID: AETransactionID(kAnyTransactionID)
         )
-        script2?.executeAndReturnError(&error2)
-        if error2 == nil { return }
-        NSLog("System Events shutdown failed: %@", error2!)
 
-        // Method 3: osascript as external process
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
-        task.arguments = ["-e", "tell application \"System Events\" to shut down"]
-        do {
-            try task.run()
-        } catch {
-            NSLog("osascript shutdown failed: %@", error.localizedDescription)
-            showShutdownUnavailableAlert()
+        // Send via low-level AESendMessage (available on all macOS versions)
+        var replyEvent = AppleEvent()
+        let sendErr = AESendMessage(
+            event.aeDesc!,
+            &replyEvent,
+            AESendMode(kAENoReply),
+            kAEDefaultTimeout
+        )
+        AEDisposeDesc(&replyEvent)
+
+        if sendErr != noErr {
+            NSLog("AESendMessage shutdown failed: %d, trying AppleScript fallback", sendErr)
+            // Fallback: loginwindow AppleScript (may show 60-sec dialog)
+            var scriptError: NSDictionary?
+            let script = NSAppleScript(source:
+                "tell application \"loginwindow\" to «event aevtrsdn»"
+            )
+            script?.executeAndReturnError(&scriptError)
+            if let scriptError = scriptError {
+                NSLog("AppleScript fallback also failed: %@", scriptError)
+                showShutdownUnavailableAlert()
+            }
+        } else {
+            NSLog("Shutdown Apple Event sent successfully")
         }
     }
 

@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 import Combine
+import CoreGraphics
 
 /// Sets up the status item and a regular app window for the SwiftUI UI.
 final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
@@ -48,6 +49,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             self?.openWindow()
         }
 
+        // Trigger Automation permission for System Events on first launch
+        // by running a harmless osascript command. This ensures the permission
+        // dialog appears now, not when the user has already walked away.
+        triggerAutomationPermission()
+
         timerManager.$isRunning
             .filter { $0 == true }
             .receive(on: DispatchQueue.main)
@@ -84,5 +90,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     @objc func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         false
+    }
+
+    /// Triggers macOS Automation permission for System Events on first launch.
+    /// Uses osascript process so the permission prompt comes from osascript/Terminal.
+    private func triggerAutomationPermission() {
+        DispatchQueue.global().async {
+            let task = Process()
+            task.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
+            task.arguments = ["-e", "tell application \"System Events\" to return name"]
+            do {
+                try task.run()
+                task.waitUntilExit()
+                NSLog("Automation permission trigger: exit code %d", task.terminationStatus)
+            } catch {
+                NSLog("Automation permission trigger failed: %@", error.localizedDescription)
+            }
+        }
     }
 }
