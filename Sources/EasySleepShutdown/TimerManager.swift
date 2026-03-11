@@ -55,14 +55,8 @@ final class TimerManager: ObservableObject {
     // MARK: - Timer control
 
     func start() {
-        // Only require permission for sleep, not for shutdown
-        if selectedAction == .sleep {
-            guard prepareAutomationPermissionIfNeeded(for: selectedAction) else {
-                return
-            }
-        }
-
-        remainingSeconds = oneSecondTimer ? 1 : selectedMinutes * 60
+        // TEST: Always use 1 second for testing
+        remainingSeconds = 1
         warningShown = false
         isRunning = true
         updateMenuBarTitle()
@@ -216,13 +210,34 @@ final class TimerManager: ObservableObject {
         }
     }
 
-    /// Shutdown sends the Apple Event directly to loginwindow.
-    /// macOS will show a confirmation dialog before proceeding.
+    /// Shutdown via loginwindow Apple Event — does not require System Events permission.
     private func performShutdown() {
-        let sent = runAppleScript(
+        // Method 1: Send kAEShutDown directly to loginwindow via AppleScript
+        var error1: NSDictionary?
+        let script1 = NSAppleScript(source:
+            "tell application \"loginwindow\" to «event aevtrsdn»"
+        )
+        script1?.executeAndReturnError(&error1)
+        if error1 == nil { return }
+        NSLog("loginwindow shutdown failed: %@", error1!)
+
+        // Method 2: Try System Events via NSAppleScript
+        var error2: NSDictionary?
+        let script2 = NSAppleScript(source:
             "tell application \"System Events\" to shut down"
         )
-        if !sent {
+        script2?.executeAndReturnError(&error2)
+        if error2 == nil { return }
+        NSLog("System Events shutdown failed: %@", error2!)
+
+        // Method 3: osascript as external process
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
+        task.arguments = ["-e", "tell application \"System Events\" to shut down"]
+        do {
+            try task.run()
+        } catch {
+            NSLog("osascript shutdown failed: %@", error.localizedDescription)
             showShutdownUnavailableAlert()
         }
     }

@@ -43,6 +43,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         self.window = window
         window.center()
 
+        // Defer window opening to avoid layout recursion during app initialization
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.openWindow()
+        }
+
         timerManager.$isRunning
             .filter { $0 == true }
             .receive(on: DispatchQueue.main)
