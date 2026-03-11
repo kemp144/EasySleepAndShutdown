@@ -35,6 +35,7 @@ struct ContentView: View {
         )
     }
 
+
     var body: some View {
         VStack(spacing: 0) {
             // ── Header ──────────────────────────────────────────────
@@ -53,14 +54,12 @@ struct ContentView: View {
             }
             .padding(.bottom, 12)
 
-            Group {
-                if showAbout {
-                    aboutView
-                } else if timerManager.isRunning {
-                    activeView
-                } else {
-                    setupView
-                }
+            if showAbout {
+                aboutView.id("about")
+            } else if timerManager.isRunning {
+                activeView.id("active")
+            } else {
+                setupView.id("setup")
             }
         }
         .padding(20)

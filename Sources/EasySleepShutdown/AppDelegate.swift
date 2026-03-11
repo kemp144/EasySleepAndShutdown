@@ -41,11 +41,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         window.isReleasedWhenClosed = false
         window.delegate = self
         self.window = window
-
-        DispatchQueue.main.async { [weak self] in
-            self?.window.center()
-            self?.openWindow()
-        }
+        window.center()
 
         timerManager.$isRunning
             .filter { $0 == true }
