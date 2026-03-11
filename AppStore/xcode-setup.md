@@ -61,6 +61,7 @@ After archive:
 2. Bundle ID: same as above (`com.easysleepshutdown.app`)
 3. Fill in all fields from `metadata.md`
 4. Upload screenshots (see screenshot plan in metadata.md)
+   Final prepared files live in `AppStore/screenshots`
 5. Set Privacy Policy URL (required — even with no data collection)
 6. Age Rating: answer all questions as "None" → results in 4+
 7. Pricing: Free or paid — your choice

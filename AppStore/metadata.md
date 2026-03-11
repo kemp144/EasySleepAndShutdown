@@ -59,13 +59,10 @@ Secondary: Productivity
 | # | Scene | Caption idea |
 |---|-------|--------------|
 | 1 | Main window open with Sleep selected, 15 min | "Set a sleep timer in one click" |
-| 2 | Dropdown open showing all time options (5–120 min) | "Choose from presets or type any duration" |
-| 3 | Custom input field with e.g. 25 min typed | "Need a custom time? Just type it." |
-| 4 | Shutdown selected, 30 min, Start button highlighted | "Sleep or Shutdown — your choice" |
-| 5 | Menu bar showing "💤 12:34" countdown | "Counts down silently in the menu bar" |
-| 6 | Main window reopened from the menu bar during an active timer | "Changed your mind? Cancel anytime." |
-| 7 | 1-minute warning alert | "Get a heads-up one minute before it fires" |
-| 8 | About panel open | "Simple, focused, and easy to understand." |
+| 2 | Shutdown selected, preset duration | "Sleep or Shutdown — your choice" |
+| 3 | Shutdown selected with custom minutes typed | "Need a custom time? Just type it." |
+| 4 | Active Sleep countdown | "Counts down quietly until it fires" |
+| 5 | Active Shutdown countdown | "Cancel anytime before it runs" |
 
 ---
 

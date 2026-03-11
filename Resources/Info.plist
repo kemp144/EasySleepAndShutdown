@@ -20,6 +20,8 @@
 	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSAppleEventsUsageDescription</key>
 	<string>Easy Sleep &amp; Shutdown needs permission to send the system shutdown request when you explicitly start a shutdown timer.</string>
 </dict>
