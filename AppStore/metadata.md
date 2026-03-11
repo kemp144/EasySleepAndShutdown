@@ -7,20 +7,21 @@ Easy Sleep & Shutdown
 Sleep or shut down on a timer
 
 ## Description
-Easy Sleep & Shutdown is a lightweight menu bar utility that puts your Mac to sleep or shuts it down after a delay you choose — without leaving anything running on your screen.
+Easy Sleep & Shutdown is a lightweight Mac utility that puts your Mac to sleep or shuts it down after a delay you choose.
 
-Set a timer for 5, 10, 15, 20, 30, 45, 60, 90, or 120 minutes, or type any custom duration. Then press Start and go. The app disappears from view and counts down silently in the menu bar. One minute before the action fires, you get an alert giving you the chance to cancel.
+Set a timer for 5, 10, 15, 20, 30, 45, 60, 90, or 120 minutes, or type any custom duration. Then press Start and go. The app closes its main window after the timer starts and shows the live countdown in the menu bar. One minute before the action fires, you get an alert giving you the chance to cancel.
 
 **How it works:**
-- Click the menu bar icon to set Sleep or Shutdown and choose a delay
-- Press Start — the popover closes, the countdown appears in the menu bar
-- Click the icon again at any time to see how much time is left or cancel
+- Launch the app and choose Sleep or Shutdown in the main window
+- Select a preset delay or type a custom duration
+- Press Start — the window closes and the countdown appears in the menu bar
+- Click the menu bar icon at any time to reopen the controls and cancel
 - One minute before the action, an alert lets you confirm or cancel
 
 **Designed for minimal interruption:**
-- No Dock icon
-- No main window
-- No background services
+- Regular Mac app with a simple single window
+- Menu bar countdown while the timer is active
+- No sign-in, setup, or background helper tools
 - Zero configuration
 
 Perfect for when you're watching a video, rendering something, or just want the Mac to sleep after you leave the room.
@@ -57,14 +58,14 @@ Secondary: Productivity
 
 | # | Scene | Caption idea |
 |---|-------|--------------|
-| 1 | Menu bar icon + popover open (Sleep selected, 15 min) | "Set a sleep timer in seconds" |
+| 1 | Main window open with Sleep selected, 15 min | "Set a sleep timer in one click" |
 | 2 | Dropdown open showing all time options (5–120 min) | "Choose from presets or type any duration" |
 | 3 | Custom input field with e.g. 25 min typed | "Need a custom time? Just type it." |
 | 4 | Shutdown selected, 30 min, Start button highlighted | "Sleep or Shutdown — your choice" |
 | 5 | Menu bar showing "💤 12:34" countdown | "Counts down silently in the menu bar" |
-| 6 | Popover reopened during active timer (cancel view) | "Changed your mind? Cancel anytime." |
+| 6 | Main window reopened from the menu bar during an active timer | "Changed your mind? Cancel anytime." |
 | 7 | 1-minute warning alert | "Get a heads-up one minute before it fires" |
-| 8 | About panel open | "Lightweight. No Dock icon. No clutter." |
+| 8 | About panel open | "Simple, focused, and easy to understand." |
 
 ---
 
@@ -72,12 +73,12 @@ Secondary: Productivity
 
 **How to test the app:**
 
-1. Launch the app — it appears only in the menu bar (no Dock icon, no window).
-2. Click the menu bar icon (powersleep symbol).
+1. Launch the app — it opens a small main window and also adds a menu bar icon.
+2. The main window opens on launch and a menu bar icon is also visible.
 3. Select "Sleep" or "Shutdown" using the segmented control.
 4. Choose a delay (e.g., 5 minutes) from the dropdown, or toggle "Custom" and type a number.
-5. Press "Start Timer" — the popover closes and the menu bar shows a countdown (e.g., 💤 04:58).
-6. To test cancellation: click the icon again, then press "Cancel".
+5. Press "Start Timer" — the main window closes and the menu bar shows a countdown (e.g., 💤 04:58).
+6. To test cancellation: click the menu bar icon again, then press "Cancel".
 7. To test the 1-minute warning: set a 1 or 2 minute timer and wait.
 
 **Regarding Sleep and Shutdown:**

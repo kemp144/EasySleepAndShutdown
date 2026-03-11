@@ -13,7 +13,6 @@ enum L {
     static let shutdown       = isSerbianLike ? "Gašenje"                 : "Shutdown"
     static let manualLabel    = isSerbianLike ? "Vreme (min)"             : "Time (min)"
     static let manualToggle   = isSerbianLike ? "Ručno"                   : "Custom"
-    static let testMode       = isSerbianLike ? "1 sekunda"               : "1 second"
     static let placeholder    = isSerbianLike ? "npr. 25"                 : "e.g. 25"
     static let min            = "min"
     static let startTimer     = isSerbianLike ? "Pokreni tajmer"          : "Start Timer"
@@ -52,10 +51,6 @@ enum L {
             ? "Aktiviraće se za \(minutes) min"
             : "Will trigger in \(minutes) min"
     }
-
-    static let willStartInOneSecond = isSerbianLike
-        ? "Aktiviraće se za 1 sekundu"
-        : "Will trigger in 1 second"
 
     static func alertBody(_ action: SleepAction) -> String {
         let actionName = action == .sleep

@@ -31,7 +31,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         )
 
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 320, height: 320),
+            contentRect: NSRect(x: 0, y: 0, width: 320, height: 450),
             styleMask: [.titled, .closable, .miniaturizable],
             backing: .buffered,
             defer: false
@@ -39,23 +39,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         window.title = "Easy Sleep & Shutdown"
         window.contentViewController = hostingController
         window.isReleasedWhenClosed = false
-        window.center()
         window.delegate = self
         self.window = window
+
+        DispatchQueue.main.async { [weak self] in
+            self?.window.center()
+            self?.openWindow()
+        }
 
         timerManager.$isRunning
             .filter { $0 == true }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                DispatchQueue.main.async { [weak self] in
-                    self?.closeWindow()
-                }
+                self?.closeWindow()
             }
             .store(in: &cancellables)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
-            self?.openWindow()
-        }
     }
 
     // MARK: - Window control
@@ -83,7 +81,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         return false
     }
 
-    func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
-        true
+    @objc func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+        false
     }
 }

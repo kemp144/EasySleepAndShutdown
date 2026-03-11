@@ -6,7 +6,6 @@ struct ContentView: View {
 
     @State private var selectedAction: SleepAction
     @State private var selectedMinutes: Int
-    @State private var oneSecondTimer: Bool
     @State private var customInput: String = ""
     @State private var useCustom: Bool = false
     @State private var showAbout: Bool = false
@@ -15,7 +14,6 @@ struct ContentView: View {
         self.timerManager = timerManager
         _selectedAction = State(initialValue: timerManager.selectedAction)
         _selectedMinutes = State(initialValue: timerManager.selectedMinutes)
-        _oneSecondTimer = State(initialValue: timerManager.oneSecondTimer)
     }
 
     // App version read from bundle (works in .app bundle, fallback for swift run)
@@ -55,16 +53,18 @@ struct ContentView: View {
             }
             .padding(.bottom, 12)
 
-            if showAbout {
-                aboutView
-            } else if timerManager.isRunning {
-                activeView
-            } else {
-                setupView
+            Group {
+                if showAbout {
+                    aboutView
+                } else if timerManager.isRunning {
+                    activeView
+                } else {
+                    setupView
+                }
             }
         }
         .padding(20)
-        .frame(width: 280)
+        .frame(width: 280, alignment: .top)
         .onChange(of: useCustom) { enabled in
             guard enabled else { return }
             customInput = "\(selectedMinutes)"
@@ -115,17 +115,7 @@ struct ContentView: View {
                 }
             }
 
-            HStack {
-                Text(L.testMode)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                Spacer()
-                Toggle("", isOn: $oneSecondTimer)
-                    .toggleStyle(.switch)
-                    .controlSize(.mini)
-            }
-
-            Text(oneSecondTimer ? L.willStartInOneSecond : L.willStartIn(selectedMinutes))
+            Text(L.willStartIn(selectedMinutes))
                 .font(.caption)
                 .foregroundColor(.secondary)
 
@@ -218,7 +208,7 @@ struct ContentView: View {
     private func startTimer() {
         timerManager.selectedAction = selectedAction
         timerManager.selectedMinutes = selectedMinutes
-        timerManager.oneSecondTimer = oneSecondTimer
+        timerManager.oneSecondTimer = false
         timerManager.start()
     }
 
