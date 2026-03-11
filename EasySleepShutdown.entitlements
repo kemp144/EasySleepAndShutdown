@@ -5,6 +5,8 @@
 	<!-- Required for Mac App Store -->
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<key>com.apple.security.automation.apple-events</key>
+	<true/>
 	<key>com.apple.security.temporary-exception.apple-events</key>
 	<array>
 		<string>com.apple.loginwindow</string>
