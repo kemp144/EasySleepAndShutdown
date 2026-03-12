@@ -114,7 +114,7 @@ final class TimerManager: ObservableObject {
     private func resetMenuBarTitle() {
         DispatchQueue.main.async { [weak self] in
             self?.statusItem?.button?.title = ""
-            let img = NSImage(systemSymbolName: "powersleep", accessibilityDescription: "Easy Sleep & Shutdown")
+            let img = NSImage(systemSymbolName: "powersleep", accessibilityDescription: L.menuBarAccessibilityDescription)
             img?.isTemplate = true
             self?.statusItem?.button?.image = img
         }
@@ -192,7 +192,7 @@ final class TimerManager: ObservableObject {
         alert.messageText = L.automationDeniedTitle
         alert.informativeText = L.automationDeniedBody
         alert.alertStyle = .warning
-        alert.addButton(withTitle: L.alertButton_ok)
+        alert.addButton(withTitle: L.okButton)
         alert.runModal()
     }
 
@@ -203,7 +203,7 @@ final class TimerManager: ObservableObject {
             alert.messageText = L.sleepUnavailableTitle
             alert.informativeText = L.sleepUnavailableBody
             alert.alertStyle = .warning
-            alert.addButton(withTitle: L.alertButton_ok)
+            alert.addButton(withTitle: L.okButton)
             alert.runModal()
         }
     }
@@ -215,7 +215,7 @@ final class TimerManager: ObservableObject {
             alert.messageText = L.shutdownUnavailableTitle
             alert.informativeText = L.shutdownUnavailableBody
             alert.alertStyle = .warning
-            alert.addButton(withTitle: L.alertButton_ok)
+            alert.addButton(withTitle: L.okButton)
             alert.runModal()
         }
     }

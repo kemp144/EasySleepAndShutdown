@@ -42,6 +42,8 @@ struct ContentView: View {
             HStack {
                 Text(L.appTitle)
                     .font(.headline)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
                 Spacer()
                 Button {
                     showAbout.toggle()
@@ -64,7 +66,7 @@ struct ContentView: View {
             }
         }
         .padding(20)
-        .frame(width: 280, alignment: .top)
+        .frame(width: 320, alignment: .top)
         .onChange(of: useCustom) { enabled in
             guard enabled else { return }
             customInput = "\(selectedMinutes)"
@@ -94,6 +96,8 @@ struct ContentView: View {
                     Text(L.manualToggle)
                         .font(.caption)
                         .foregroundColor(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
                 }
 
                 if useCustom {
@@ -101,13 +105,13 @@ struct ContentView: View {
                         TextField(L.placeholder, text: customInputBinding)
                             .textFieldStyle(.roundedBorder)
                             .onSubmit { applyCustomInput() }
-                        Text(L.min)
+                        Text(L.minuteUnit)
                             .foregroundColor(.secondary)
                     }
                 } else {
                     Picker("", selection: $selectedMinutes) {
                         ForEach(timerManager.timeOptions, id: \.self) { min in
-                            Text("\(min) min").tag(min)
+                            Text(L.presetMinutes(min)).tag(min)
                         }
                     }
                     .pickerStyle(.menu)
@@ -191,7 +195,7 @@ struct ContentView: View {
             Button {
                 showAbout = false
             } label: {
-                Text("OK")
+                Text(L.okButton)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)

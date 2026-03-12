@@ -6,6 +6,10 @@ Easy Sleep & Shutdown
 ## Subtitle (max 30 chars)
 Sleep or shut down on a timer
 
+## What's New
+Added support for 15 languages:
+English, Japanese, German, French, Italian, Spanish, Portuguese, Dutch, Swedish, Danish, Norwegian Bokmal, Finnish, Traditional Chinese, Simplified Chinese, and Korean.
+
 ## Description
 Easy Sleep & Shutdown is a lightweight Mac utility that puts your Mac to sleep or shuts it down after a delay you choose.
 

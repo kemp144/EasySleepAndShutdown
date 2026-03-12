@@ -19,7 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         timerManager.setStatusItem(statusItem)
 
         if let button = statusItem.button {
-            let image = NSImage(systemSymbolName: "powersleep", accessibilityDescription: "Easy Sleep & Shutdown")
+            let image = NSImage(systemSymbolName: "powersleep", accessibilityDescription: L.menuBarAccessibilityDescription)
             image?.isTemplate = true
             button.image = image
             button.action = #selector(toggleWindow)
@@ -31,12 +31,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         )
 
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 320, height: 450),
+            contentRect: NSRect(x: 0, y: 0, width: 360, height: 470),
             styleMask: [.titled, .closable, .miniaturizable],
             backing: .buffered,
             defer: false
         )
-        window.title = "Easy Sleep & Shutdown"
+        window.title = L.appTitle
         window.contentViewController = hostingController
         window.isReleasedWhenClosed = false
         window.delegate = self

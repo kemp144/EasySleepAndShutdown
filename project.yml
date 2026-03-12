@@ -39,8 +39,45 @@ targets:
     resources:
       - Resources/Assets.xcassets
       - Resources/PrivacyInfo.xcprivacy
+      - Resources/en.lproj/InfoPlist.strings
+      - Resources/ja.lproj/InfoPlist.strings
+      - Resources/de.lproj/InfoPlist.strings
+      - Resources/fr.lproj/InfoPlist.strings
+      - Resources/it.lproj/InfoPlist.strings
+      - Resources/es.lproj/InfoPlist.strings
+      - Resources/pt.lproj/InfoPlist.strings
+      - Resources/nl.lproj/InfoPlist.strings
+      - Resources/sv.lproj/InfoPlist.strings
+      - Resources/da.lproj/InfoPlist.strings
+      - Resources/nb.lproj/InfoPlist.strings
+      - Resources/fi.lproj/InfoPlist.strings
+      - Resources/zh-Hant.lproj/InfoPlist.strings
+      - Resources/zh-Hans.lproj/InfoPlist.strings
+      - Resources/ko.lproj/InfoPlist.strings
     info:
       path: Resources/Info.plist
+      properties:
+        LSApplicationCategoryType: public.app-category.utilities
+        ITSAppUsesNonExemptEncryption: false
+        NSAppleEventsUsageDescription: Easy Sleep & Shutdown needs permission to send the system shutdown request when you explicitly start a shutdown timer.
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1"
+        CFBundleLocalizations:
+          - en
+          - ja
+          - de
+          - fr
+          - it
+          - es
+          - pt
+          - nl
+          - sv
+          - da
+          - nb
+          - fi
+          - zh-Hant
+          - zh-Hans
+          - ko
     settings:
       base:
         PRODUCT_MODULE_NAME: EasySleepShutdown
