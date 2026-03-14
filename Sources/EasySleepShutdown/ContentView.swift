@@ -3,15 +3,20 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var timerManager: TimerManager
+    @ObservedObject private var scriptManager: ScriptManager
 
-    @State private var selectedAction: SleepAction
+    @State private var selectedAction: SystemAction
     @State private var selectedMinutes: Int
     @State private var customInput: String = ""
     @State private var useCustom: Bool = false
     @State private var showAbout: Bool = false
+    @State private var isExportingScript: Bool = false
+    @State private var hasDismissedOnboarding: Bool = false
+    @State private var showContinueAfterExport: Bool = false
 
     init(timerManager: TimerManager) {
         self.timerManager = timerManager
+        self.scriptManager = timerManager.scriptManager
         _selectedAction = State(initialValue: timerManager.selectedAction)
         _selectedMinutes = State(initialValue: timerManager.selectedMinutes)
     }
@@ -57,26 +62,31 @@ struct ContentView: View {
 
             if showAbout {
                 aboutView.id("about")
+            } else if !scriptManager.isInstalled && !hasDismissedOnboarding {
+                onboardingView.id("onboarding")
             } else if timerManager.isRunning {
                 activeView.id("active")
             } else {
-                setupView.id("setup")
+                timerSetupView.id("setup")
             }
         }
         .padding(20)
-        .frame(width: 280, alignment: .top)
+        .frame(width: 336, alignment: .top)
         .onChange(of: useCustom) { enabled in
             guard enabled else { return }
             customInput = "\(selectedMinutes)"
+        }
+        .task {
+            scriptManager.refreshInstallationStatus()
         }
     }
 
     // MARK: - Setup UI
 
-    private var setupView: some View {
+    private var timerSetupView: some View {
         VStack(spacing: 14) {
             Picker("", selection: $selectedAction) {
-                ForEach(SleepAction.allCases) { action in
+                ForEach(SystemAction.allCases) { action in
                     Text(action.label).tag(action)
                 }
             }
@@ -119,15 +129,20 @@ struct ContentView: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
 
+            Text(L.readyStateCaption)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+
             Button(action: startTimer) {
-                Text(timerManager.isPreparingStart ? L.preparing : L.startTimer)
+                Text(L.startTimer)
                     .bold()
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .tint(.green)
             .controlSize(.large)
-            .disabled(selectedMinutes <= 0 || timerManager.isPreparingStart)
+            .disabled(selectedMinutes <= 0)
 
             Button(action: quitApp) {
                 Text(L.quitApp)
@@ -135,9 +150,75 @@ struct ContentView: View {
             }
             .buttonStyle(.bordered)
             .controlSize(.regular)
-            .disabled(timerManager.isPreparingStart)
         }
-        .disabled(timerManager.isPreparingStart)
+    }
+
+    private var onboardingView: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .center, spacing: 12) {
+                Image(systemName: "folder.badge.questionmark")
+                    .font(.system(size: 28, weight: .regular))
+                    .foregroundColor(.accentColor)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L.setupRequiredTitle)
+                        .font(.headline)
+                    Text(L.onboardingIntro)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            Text(L.setupRequiredBody)
+                .font(.callout)
+                .fixedSize(horizontal: false, vertical: true)
+
+            if let folderURL = scriptManager.scriptsFolderURL {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L.scriptsFolderLabel)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(folderURL.path)
+                        .font(.caption.monospaced())
+                        .textSelection(.enabled)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.secondary.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            }
+
+            if let feedback = onboardingFeedback {
+                Text(feedback)
+                    .font(.caption)
+                    .foregroundColor(scriptManager.lastError == nil ? .secondary : .red)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            if showContinueAfterExport {
+                Button(action: continueIntoApp) {
+                    Text(L.continueButton)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+            } else {
+                Button(action: prepareScript) {
+                    Text(isExportingScript ? L.preparingScript : L.prepareScript)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(isExportingScript)
+            }
+
+            Button(action: quitApp) {
+                Text(L.quitApp)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.plain)
+            .padding(.top, 2)
+        }
     }
 
     // MARK: - Active countdown UI (shown when user reopens popover)
@@ -213,6 +294,46 @@ struct ContentView: View {
         timerManager.startFromUserIntent()
     }
 
+    private func prepareScript() {
+        scriptManager.clearFeedback()
+        isExportingScript = true
+
+        Task { @MainActor in
+            defer { isExportingScript = false }
+
+            do {
+                if try scriptManager.exportBundledScript() != nil {
+                    scriptManager.refreshInstallationStatus()
+                    if scriptManager.isInstalled {
+                        scriptManager.presentMessage(L.prepareScriptSuccessMessage)
+                        showContinueAfterExport = true
+                    } else {
+                        showContinueAfterExport = false
+                        scriptManager.present(error: .scriptMissing)
+                    }
+                }
+            } catch let error as ScriptManagerError {
+                showContinueAfterExport = false
+                scriptManager.present(error: error)
+            } catch {
+                showContinueAfterExport = false
+                scriptManager.present(error: .scriptExportFailed(details: error.localizedDescription))
+            }
+        }
+    }
+
+    private func continueIntoApp() {
+        scriptManager.refreshInstallationStatus()
+
+        guard scriptManager.isInstalled else {
+            scriptManager.revealSetupLocations()
+            scriptManager.present(error: .scriptMissing)
+            return
+        }
+
+        hasDismissedOnboarding = true
+    }
+
     private func quitApp() {
         NSApplication.shared.terminate(nil)
     }
@@ -221,5 +342,19 @@ struct ContentView: View {
         let mins = timerManager.remainingSeconds / 60
         let secs = timerManager.remainingSeconds % 60
         return String(format: "%02d:%02d", mins, secs)
+    }
+
+    private var onboardingFeedback: String? {
+        if let error = scriptManager.lastError {
+            let baseMessage = error.recoverySuggestion ?? error.errorDescription ?? ""
+
+            if let details = error.debugDetails, !details.isEmpty {
+                return "\(baseMessage)\n\nDetails: \(details)"
+            }
+
+            return baseMessage
+        }
+
+        return scriptManager.lastSetupMessage
     }
 }

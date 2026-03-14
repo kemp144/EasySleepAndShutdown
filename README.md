@@ -6,6 +6,7 @@ A simple tool for scheduling sleep and shutdown operations on your computer.
 
 - Easy scheduling of sleep/shutdown timers
 - Simple and intuitive interface
+- One-time guided setup for a user-installed AppleScript in the app's Application Scripts folder
 
 ## Getting Started
 
@@ -37,6 +38,16 @@ MIT
 15. [ ] Age rating proveri / potvrdi
 16. [ ] TestFlight: interni test
 17. [ ] Submit for Review + App Review Notes iz metadata.md
+
+## Sandbox setup flow
+
+For Mac App Store compliance, the app no longer talks to `loginwindow` directly.
+Instead, it guides the user through a one-time setup:
+
+1. Open the app-specific Application Scripts folder.
+2. Export the sample `SystemActions.scpt` script.
+3. Move that script into the Application Scripts folder.
+4. Return to the app and choose "Check Again".
 
 ## Xcode project
 

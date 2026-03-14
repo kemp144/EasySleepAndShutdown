@@ -23,6 +23,6 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Easy Sleep &amp; Shutdown needs permission to send the system shutdown request when you explicitly start a shutdown timer.</string>
+	<string>Easy Sleep &amp; Shutdown runs a user-installed script when you choose Sleep or Shutdown.</string>
 </dict>
 </plist>

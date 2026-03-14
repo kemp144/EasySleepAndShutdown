@@ -14,6 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         timerManager = TimerManager()
+        timerManager.scriptManager.refreshInstallationStatus()
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         timerManager.setStatusItem(statusItem)
@@ -31,7 +32,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         )
 
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 320, height: 450),
+            contentRect: NSRect(x: 0, y: 0, width: 360, height: 520),
             styleMask: [.titled, .closable, .miniaturizable],
             backing: .buffered,
             defer: false

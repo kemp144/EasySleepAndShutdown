@@ -8,9 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1E6B1E82231ED285186C9F10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00943BA6BE2E0241F020889F /* Assets.xcassets */; };
-		24A3D47B6B2647E2B2D7601A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 40AA9A57DB16459F885EE6B5 /* PrivacyInfo.xcprivacy */; };
 		37B5904296F27A6DDFA71484 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84C1D19B676D7706AD86CAA /* AppDelegate.swift */; };
+		3D792829CD32F571A2DB7CED /* SystemActions.applescript in Resources */ = {isa = PBXBuildFile; fileRef = D9DFEAE0EB1213C2B2220D38 /* SystemActions.applescript */; };
 		6A9A7B0EE0A78E5EDAC4C9FE /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D0AD6E6A15A5B701A2973 /* Strings.swift */; };
+		A43703F63DE21C9676DE6459 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CDE994782C13305940F284CE /* PrivacyInfo.xcprivacy */; };
 		CAD0AEDE9913427C7B0989F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E2C2D7D5948FEBF9E1CD01 /* ContentView.swift */; };
 		E75F9A13F0EE7E6E1E477D46 /* TimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB29C0F399C7BDB1BFB34B0 /* TimerManager.swift */; };
 		F375238898522F616B190064 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C01BEE8AFCC7218618F48EF /* main.swift */; };
@@ -18,12 +19,13 @@
 
 /* Begin PBXFileReference section */
 		00943BA6BE2E0241F020889F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		40AA9A57DB16459F885EE6B5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Resources/PrivacyInfo.xcprivacy; sourceTree = SOURCE_ROOT; };
 		3C01BEE8AFCC7218618F48EF /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		6EB29C0F399C7BDB1BFB34B0 /* TimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerManager.swift; sourceTree = "<group>"; };
 		7B9D0AD6E6A15A5B701A2973 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
-		9D679677858AC2AF1212E80D /* Easy Sleep & Shutdown.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Easy Sleep & Shutdown.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D679677858AC2AF1212E80D /* EasySleepShutdown.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasySleepShutdown.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9E2C2D7D5948FEBF9E1CD01 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CDE994782C13305940F284CE /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		D9DFEAE0EB1213C2B2220D38 /* SystemActions.applescript */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.applescript; path = SystemActions.applescript; sourceTree = "<group>"; };
 		F84C1D19B676D7706AD86CAA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -31,7 +33,7 @@
 		19D7176334C0A713F51C37FF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9D679677858AC2AF1212E80D /* Easy Sleep & Shutdown.app */,
+				9D679677858AC2AF1212E80D /* EasySleepShutdown.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -42,6 +44,15 @@
 				70FC5B42F13722A9069635FA /* EasySleepShutdown */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		4202EA8B3D8D09B22FE7285F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CDE994782C13305940F284CE /* PrivacyInfo.xcprivacy */,
+				D9DFEAE0EB1213C2B2220D38 /* SystemActions.applescript */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		70FC5B42F13722A9069635FA /* EasySleepShutdown */ = {
@@ -60,9 +71,9 @@
 		C0147AE59E06F546FB441559 = {
 			isa = PBXGroup;
 			children = (
+				4202EA8B3D8D09B22FE7285F /* Resources */,
 				2E38B5CAB8F85308712BFE16 /* Sources */,
 				19D7176334C0A713F51C37FF /* Products */,
-				40AA9A57DB16459F885EE6B5 /* PrivacyInfo.xcprivacy */,
 			);
 			sourceTree = "<group>";
 		};
@@ -84,7 +95,7 @@
 			packageProductDependencies = (
 			);
 			productName = EasySleepShutdown;
-			productReference = 9D679677858AC2AF1212E80D /* Easy Sleep & Shutdown.app */;
+			productReference = 9D679677858AC2AF1212E80D /* EasySleepShutdown.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -94,7 +105,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2630;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					3E7DC6E5A603538BBE5A0B54 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = 0BAD7924D3A39707A672356C /* Build configuration list for PBXProject "EasySleepAndShutdown" */;
 			developmentRegion = en;
@@ -121,7 +138,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E6B1E82231ED285186C9F10 /* Assets.xcassets in Resources */,
-				24A3D47B6B2647E2B2D7601A /* PrivacyInfo.xcprivacy in Resources */,
+				A43703F63DE21C9676DE6459 /* PrivacyInfo.xcprivacy in Resources */,
+				3D792829CD32F571A2DB7CED /* SystemActions.applescript in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,16 +196,15 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = EasySleepShutdown.entitlements;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7B8JYS7JC8;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -205,7 +222,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.easysleepshutdown.app;
 				PRODUCT_NAME = "Easy Sleep & Shutdown";
 				SDKROOT = macosx;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.7;
@@ -247,16 +263,15 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = EasySleepShutdown.Debug.entitlements;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 7B8JYS7JC8;
-				ENABLE_APP_SANDBOX = NO;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -281,7 +296,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.easysleepshutdown.app;
 				PRODUCT_NAME = "Easy Sleep & Shutdown";
 				SDKROOT = macosx;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.7;
@@ -292,13 +306,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = EasySleepShutdown.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 7B8JYS7JC8;
 				EXECUTABLE_NAME = EasySleepShutdown;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -306,7 +314,6 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_MODULE_NAME = EasySleepShutdown;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -315,11 +322,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = EasySleepShutdown.Debug.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 7B8JYS7JC8;
 				EXECUTABLE_NAME = EasySleepShutdown;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

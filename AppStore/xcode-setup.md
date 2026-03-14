@@ -30,8 +30,8 @@ Use the generated `.xcodeproj` for signing, archive, and App Store submission.
   - Bundle Identifier: `com.easysleepshutdown.app`  ← change to your own unique ID
   - Enable "Automatically manage signing"
   - Click "+ Capability" → add **App Sandbox**
-  - Under App Sandbox, enable NO additional checkboxes for this App Store build
-- Debug/local runs should stay unsandboxed so sleep/shutdown can execute normally during development
+  - Under App Sandbox, keep the standard sandbox enabled and do not add temporary exception entitlements
+- Debug and Release should both stay sandboxed so the script-based setup flow matches the App Store build
 
 ## 3. Link the entitlements file
 - Build Settings → search "Code Signing Entitlements"
@@ -84,5 +84,5 @@ After archive:
 - [ ] App Store Connect: Privacy Policy URL live and accessible
 - [ ] App Store Connect: Build uploaded and processed
 - [ ] TestFlight: Test internally — confirm sleep action works, cancel works, 1-min alert works
-- [ ] TestFlight: Confirm shutdown works in the signed Release build with the loginwindow Apple Events entitlement
-- [ ] Submit for Review: Add App Review Notes explaining Apple Events usage for the shutdown option
+- [ ] TestFlight: Confirm the exported `SystemActions.scpt` script works after the user moves it into the Application Scripts folder
+- [ ] Submit for Review: Add App Review Notes explaining the one-time user-installed script setup and `NSUserAppleScriptTask` execution flow

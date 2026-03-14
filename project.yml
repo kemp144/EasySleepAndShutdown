@@ -25,9 +25,11 @@ settings:
   configs:
     Debug:
       CODE_SIGN_ENTITLEMENTS: EasySleepShutdown.Debug.entitlements
-      ENABLE_APP_SANDBOX: NO
+      CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+      ENABLE_APP_SANDBOX: YES
     Release:
       CODE_SIGN_ENTITLEMENTS: EasySleepShutdown.entitlements
+      CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
       ENABLE_APP_SANDBOX: YES
 
 targets:
@@ -36,11 +38,18 @@ targets:
     platform: macOS
     sources:
       - Sources/EasySleepShutdown
-    resources:
-      - Resources/Assets.xcassets
-      - Resources/PrivacyInfo.xcprivacy
+      - path: Resources/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Resources/SystemActions.applescript
+        buildPhase: resources
     info:
       path: Resources/Info.plist
+      properties:
+        LSApplicationCategoryType: public.app-category.utilities
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1"
+        ITSAppUsesNonExemptEncryption: false
+        NSAppleEventsUsageDescription: "Easy Sleep & Shutdown runs a user-installed script when you choose Sleep or Shutdown."
     settings:
       base:
         PRODUCT_MODULE_NAME: EasySleepShutdown
