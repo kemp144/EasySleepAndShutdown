@@ -9,6 +9,8 @@ BUNDLE_NAME="Easy Sleep & Shutdown"
 BUNDLE_ID="com.easysleepshutdown.app"
 APP_DIR="build/${BUNDLE_NAME}.app"
 ARCHIVE_DIR="build/${BUNDLE_NAME}.xcarchive"
+ICON_SOURCE_DIR="Sources/EasySleepShutdown/Assets.xcassets/AppIcon.appiconset"
+ICON_FILE="AppIcon.icns"
 
 DO_SIGN=false
 DO_ARCHIVE=false
@@ -33,10 +35,22 @@ cp ".build/release/${APP_NAME}" "${APP_DIR}/Contents/MacOS/${APP_NAME}"
 echo "→ Copying Info.plist..."
 cp "Resources/Info.plist" "${APP_DIR}/Contents/Info.plist"
 
+/usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier ${BUNDLE_ID}" "${APP_DIR}/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c "Set :CFBundleName ${BUNDLE_NAME}" "${APP_DIR}/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c "Set :CFBundleExecutable ${APP_NAME}" "${APP_DIR}/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string ${ICON_FILE}" "${APP_DIR}/Contents/Info.plist" 2>/dev/null || \
+  /usr/libexec/PlistBuddy -c "Set :CFBundleIconFile ${ICON_FILE}" "${APP_DIR}/Contents/Info.plist"
+
 echo "→ Copying app icon..."
-if [ -d "Sources/EasySleepShutdown/Assets.xcassets" ]; then
+if [ -d "${ICON_SOURCE_DIR}" ]; then
   cp -r "Sources/EasySleepShutdown/Assets.xcassets" "${APP_DIR}/Contents/Resources/"
+  ICONSET_DIR="build/AppIcon.iconset"
+  rm -rf "${ICONSET_DIR}"
+  cp -R "${ICON_SOURCE_DIR}" "${ICONSET_DIR}"
+  iconutil -c icns "${ICONSET_DIR}" -o "${APP_DIR}/Contents/Resources/${ICON_FILE}"
+  rm -rf "${ICONSET_DIR}"
   echo "  ✓ Assets.xcassets copied"
+  echo "  ✓ ${ICON_FILE} generated"
 fi
 
 # Sign app with entitlements if requested

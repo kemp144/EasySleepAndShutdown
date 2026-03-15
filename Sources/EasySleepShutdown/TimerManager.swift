@@ -117,7 +117,7 @@ final class ScriptManager: ObservableObject {
 
     func isScriptInstalled() -> Bool {
         do {
-            let url = try installedScriptURL()
+            let url = try resolvedScriptURL()
             let exists = FileManager.default.fileExists(atPath: url.path)
             isInstalled = exists
             lastError = nil
@@ -160,7 +160,6 @@ final class ScriptManager: ObservableObject {
 
     func exportBundledScript() throws -> URL? {
         let scriptsFolderURL = try applicationScriptsDirectory()
-        let installedURL = try installedScriptURL()
         let fileManager = FileManager.default
 
         do {
@@ -204,17 +203,6 @@ final class ScriptManager: ObservableObject {
             throw ScriptManagerError.scriptExportFailed(details: error.localizedDescription)
         }
 
-        do {
-            if destinationURL.standardizedFileURL != installedURL.standardizedFileURL {
-                if fileManager.fileExists(atPath: installedURL.path) {
-                    try fileManager.removeItem(at: installedURL)
-                }
-                try fileManager.copyItem(at: destinationURL, to: installedURL)
-            }
-        } catch {
-            throw ScriptManagerError.scriptInstallFailed(details: error.localizedDescription)
-        }
-
         NSWorkspace.shared.activateFileViewerSelecting([destinationURL])
 
         lastExportedScriptURL = destinationURL
@@ -248,11 +236,7 @@ final class ScriptManager: ObservableObject {
     }
 
     func executeAction(_ action: SystemAction) async throws {
-        let scriptURL = try installedScriptURL()
-        guard FileManager.default.fileExists(atPath: scriptURL.path) else {
-            isInstalled = false
-            throw ScriptManagerError.scriptMissing
-        }
+        let scriptURL = try resolvedScriptURL()
 
         let task: NSUserAppleScriptTask
         do {
@@ -300,6 +284,26 @@ final class ScriptManager: ObservableObject {
 
     private func installedScriptURL() throws -> URL {
         try applicationScriptsDirectory().appendingPathComponent(Self.scriptFileName)
+    }
+
+    private func legacyInstalledScriptURL() throws -> URL {
+        try applicationScriptsDirectory()
+            .deletingLastPathComponent()
+            .appendingPathComponent(Self.scriptFileName)
+    }
+
+    private func resolvedScriptURL() throws -> URL {
+        let preferredURL = try installedScriptURL()
+        if FileManager.default.fileExists(atPath: preferredURL.path) {
+            return preferredURL
+        }
+
+        let legacyURL = try legacyInstalledScriptURL()
+        if FileManager.default.fileExists(atPath: legacyURL.path) {
+            return legacyURL
+        }
+
+        throw ScriptManagerError.scriptMissing
     }
 
     // The app exports a sample script and nudges saving directly into the Application Scripts
